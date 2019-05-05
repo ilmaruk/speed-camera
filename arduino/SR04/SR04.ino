@@ -1,5 +1,3 @@
-//www.elegoo.com
-//2016.12.08
 #include "SR04.h"
 
 #define TRIG_PIN 12
