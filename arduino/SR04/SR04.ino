@@ -1,3 +1,5 @@
+//www.elegoo.com
+//2016.12.08
 #include "SR04.h"
 
 #define TRIG_PIN 12
@@ -28,7 +30,17 @@ void loop() {
     //logValue("Movement", movement, "mm");
 
     double velocity = movement / SAMPLING_INTERVAL; // mm/ms = m/s
-    logValue("Velocity", velocity, "m/s");
+    //logValue("Velocity", velocity, "m/s");
+
+    Serial.print("Prev Dist: ");
+    Serial.print(previousDistance);
+    Serial.print("mm - Curr Dist: ");
+    Serial.print(currentDistance);
+    Serial.print("mm - Movement: ");
+    Serial.print(movement);
+    Serial.print("mm - Velocity: ");
+    Serial.print(velocity);
+    Serial.println("mm/ms");
 
     if (velocity > SPEED_LIMIT) {
       alarm(velocity);
@@ -52,6 +64,11 @@ void alarm(double velocity) {
   Serial.print("Alarm, speeding: ");
   Serial.print(velocity);
   Serial.println(" m/s");
+
+  // Turn on LED for 1 second
+  digitalWrite(LED, HIGH);
+  delay(1000);
+  digitalWrite(LED, LOW);
 
   // TODO: notify RaspberryPi
 }
