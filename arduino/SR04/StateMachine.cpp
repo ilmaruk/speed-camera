@@ -40,3 +40,16 @@ void SmartTrafficLight::setState(State newState) {
 State SmartTrafficLight::getState() {
   return currentState_;
 }
+
+void SmartTrafficLight::carousel() {
+  int pins[3] = {redLedPin_, amberLedPin_, greenLedPin_};
+  State initialState = currentState_;
+  for (int i=0; i<3; i++) {
+    for (int p=0; p<3; p++) {
+      digitalWrite(pins[p], HIGH);
+      delay(400);
+      digitalWrite(pins[p], LOW);
+    }
+  }
+  setState(initialState);
+}

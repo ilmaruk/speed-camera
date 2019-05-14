@@ -21,7 +21,9 @@ void setup() {
   pinMode(GREEN_LED_PIN, OUTPUT);
   Serial.begin(9600);
 
-  delay(1000);
+  stl.carousel();
+  
+  //delay(1000);
 }
 
 void loop() {

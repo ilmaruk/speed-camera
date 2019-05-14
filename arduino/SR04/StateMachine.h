@@ -24,6 +24,7 @@ public:
   void update();
   void setState(State newState);
   State getState();
+  void carousel();
 private:
   int redLedPin_;
   int amberLedPin_;
