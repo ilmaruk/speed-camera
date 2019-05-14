@@ -1,22 +1,25 @@
-//www.elegoo.com
-//2016.12.08
 #include "SR04.h"
+#include "StateMachine.h"
 
-#define TRIG_PIN 12
-#define ECHO_PIN 11
-#define LED 9
+#define TRIG_PIN 8
+#define ECHO_PIN 9
+#define RED_LED_PIN 6
+#define AMBER_LED_PIN 5
+#define GREEN_LED_PIN 3
 #define SAMPLING_INTERVAL 250
-#define SPEED_LIMIT 1.0 // m/s
+#define SPEED_LIMIT 0.2 // m/s
 
 SR04 sr04 = SR04(ECHO_PIN, TRIG_PIN);
+
+SmartTrafficLight stl = SmartTrafficLight(RED_LED_PIN, AMBER_LED_PIN, GREEN_LED_PIN);
 
 long previousDistance = -1;
 
 void setup() {
-  pinMode(LED, OUTPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(AMBER_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
   Serial.begin(9600);
-
-  sr04 = SR04(ECHO_PIN, TRIG_PIN);
 
   delay(1000);
 }
@@ -32,22 +35,15 @@ void loop() {
     double velocity = movement / SAMPLING_INTERVAL; // mm/ms = m/s
     //logValue("Velocity", velocity, "m/s");
 
-    Serial.print("Prev Dist: ");
-    Serial.print(previousDistance);
-    Serial.print("mm - Curr Dist: ");
-    Serial.print(currentDistance);
-    Serial.print("mm - Movement: ");
-    Serial.print(movement);
-    Serial.print("mm - Velocity: ");
-    Serial.print(velocity);
-    Serial.println("mm/ms");
-
     if (velocity > SPEED_LIMIT) {
       alarm(velocity);
     }
   }
 
   previousDistance = currentDistance;
+
+  // Traffic light
+  stl.update();
 
   delay(SAMPLING_INTERVAL);
 }
@@ -61,14 +57,15 @@ void logValue(const char *prefix, double value, const char *unit) {
 }
 
 void alarm(double velocity) {
-  Serial.print("Alarm, speeding: ");
-  Serial.print(velocity);
-  Serial.println(" m/s");
+//  Serial.print("Alarm, speeding: ");
+//  Serial.print(velocity);
+//  Serial.println(" m/s");
 
-  // Turn on LED for 1 second
-  digitalWrite(LED, HIGH);
-  delay(1000);
-  digitalWrite(LED, LOW);
+  // Set traffic light to Red
+  if (stl.getState().id == GO) {
+    stl.setState(stateSlow);
+  }
 
-  // TODO: notify RaspberryPi
+  Serial.print("Speeding,");
+  Serial.println(velocity);
 }
