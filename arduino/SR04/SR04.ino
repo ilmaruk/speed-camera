@@ -35,16 +35,6 @@ void loop() {
     double velocity = movement / SAMPLING_INTERVAL; // mm/ms = m/s
     //logValue("Velocity", velocity, "m/s");
 
-//    Serial.print("Prev Dist: ");
-//    Serial.print(previousDistance);
-//    Serial.print("mm - Curr Dist: ");
-//    Serial.print(currentDistance);
-//    Serial.print("mm - Movement: ");
-//    Serial.print(movement);
-//    Serial.print("mm - Velocity: ");
-//    Serial.print(velocity);
-//    Serial.println("mm/ms");
-
     if (velocity > SPEED_LIMIT) {
       alarm(velocity);
     }
@@ -67,14 +57,15 @@ void logValue(const char *prefix, double value, const char *unit) {
 }
 
 void alarm(double velocity) {
-  Serial.print("Alarm, speeding: ");
-  Serial.print(velocity);
-  Serial.println(" m/s");
+//  Serial.print("Alarm, speeding: ");
+//  Serial.print(velocity);
+//  Serial.println(" m/s");
 
   // Set traffic light to Red
   if (stl.getState().id == GO) {
     stl.setState(stateSlow);
   }
 
-  // TODO: notify RaspberryPi
+  Serial.print("Speeding,");
+  Serial.println(velocity);
 }
