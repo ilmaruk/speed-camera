@@ -1,42 +1,25 @@
-//www.elegoo.com
-//2016.12.08
 #include "SR04.h"
+#include "StateMachine.h"
 
 #define TRIG_PIN 8
 #define ECHO_PIN 9
-#define RED 6
-#define AMBER 5
-#define GREEN 3
+#define RED_LED_PIN 6
+#define AMBER_LED_PIN 5
+#define GREEN_LED_PIN 3
 #define SAMPLING_INTERVAL 250
 #define SPEED_LIMIT 0.2 // m/s
 
 SR04 sr04 = SR04(ECHO_PIN, TRIG_PIN);
 
+SmartTrafficLight stl = SmartTrafficLight(RED_LED_PIN, AMBER_LED_PIN, GREEN_LED_PIN);
+
 long previousDistance = -1;
 
-unsigned long nextStateAt = 0;
-struct State {
-  char id;
-  int red;
-  int amber;
-  int green;
-  unsigned int duration;
-};
-State state;
-const State stateRed = {'r', HIGH, LOW, LOW, 30000};
-const State stateAmber = {'a', LOW, HIGH, LOW, 2000};
-const State stateGreen = {'g', LOW, LOW, HIGH, 60000};
-const State stateGreenAmber = {'x', LOW, HIGH, HIGH, 3000};
-
-#define STATE_RED = 
-
 void setup() {
-  pinMode(RED, OUTPUT);
-  pinMode(AMBER, OUTPUT);
-  pinMode(GREEN, OUTPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(AMBER_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
   Serial.begin(9600);
-
-  sr04 = SR04(ECHO_PIN, TRIG_PIN);
 
   delay(1000);
 }
@@ -70,24 +53,7 @@ void loop() {
   previousDistance = currentDistance;
 
   // Traffic light
-  if (nextStateAt == 0) {
-    setState(stateRed);
-  } else if (millis() >= nextStateAt) {
-    switch (state.id) {
-      case 'r':
-        setState(stateAmber);
-        break;
-      case 'a':
-        setState(stateGreen);
-        break;
-      case 'g':
-        setState(stateGreenAmber);
-        break;
-      case 'x':
-        setState(stateRed);
-        break;
-    }
-  }
+  stl.update();
 
   delay(SAMPLING_INTERVAL);
 }
@@ -105,29 +71,10 @@ void alarm(double velocity) {
   Serial.print(velocity);
   Serial.println(" m/s");
 
-  // Turn on LED for 1 second
-//  digitalWrite(RED, HIGH);
-//  digitalWrite(AMBER, HIGH);
-//  digitalWrite(GREEN, HIGH);
-//  delay(1000);
-//  digitalWrite(RED, LOW);
-//  digitalWrite(AMBER, LOW);
-//  digitalWrite(GREEN, LOW);
-
   // Set traffic light to Red
-  if (state.id == 'g') {
-    setState(stateGreenAmber);
+  if (stl.getState().id == GO) {
+    stl.setState(stateSlow);
   }
 
   // TODO: notify RaspberryPi
-}
-
-void setState(State nextState) {
-  Serial.print("Setting state: ");
-  Serial.println(nextState.id);
-  state = nextState;
-  digitalWrite(RED, state.red);
-  digitalWrite(AMBER, state.amber);
-  digitalWrite(GREEN, state.green);
-  nextStateAt = millis() + state.duration;
 }
