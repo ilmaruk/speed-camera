@@ -1,5 +1,5 @@
-#ifndef STATE_MACHINE
-#define STATE_MACHINE
+#ifndef STATE_MACHINE_H
+#define STATE_MACHINE_H
 
 #include <Arduino.h>
 
@@ -33,4 +33,4 @@ private:
   unsigned long nextStateAt_;
 };
 
-#endif
+#endif // STATE_MACHINE_H
