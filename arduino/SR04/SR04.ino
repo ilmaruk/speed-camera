@@ -1,5 +1,6 @@
 #include "SR04.h"
 #include "StateMachine.h"
+#include "SpeedCamera.h"
 
 #define TRIG_PIN 8
 #define ECHO_PIN 9
@@ -13,7 +14,7 @@ SR04 sr04 = SR04(ECHO_PIN, TRIG_PIN);
 
 SmartTrafficLight stl = SmartTrafficLight(RED_LED_PIN, AMBER_LED_PIN, GREEN_LED_PIN);
 
-SpeedCamera sc = SpeedCamera(sr04);
+SpeedCamera sc = SpeedCamera(sr04, SPEED_LIMIT);
 
 void setup() {
   pinMode(RED_LED_PIN, OUTPUT);

@@ -1,6 +1,6 @@
 #include "SpeedCamera.h"
 
-SpeedCamera::SpeedCamera(SR04 sensor): sensor_(sensor), speedLimit_(speedLimit),
+SpeedCamera::SpeedCamera(SR04 sensor, double speedLimit): sensor_(sensor), speedLimit_(speedLimit),
   previousDistance_(-1) {};
 
 bool SpeedCamera::detectSpeeding(unsigned int samplingInterval) {
