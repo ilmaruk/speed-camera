@@ -48,7 +48,7 @@ def analyse_photo(image, classifier):
 
     image_path = '../photos/speeding-{:d}.jpg'.format(int(time.time()))
     cv2.imwrite(image_path, image)
-    logging.info(f'Store new image at {image_path}')
+    logging.info('Store new image at {:s}'.format(image_path))
 
 if '__main__' == __name__:
     root = logging.getLogger()
@@ -60,4 +60,7 @@ if '__main__' == __name__:
     handler.setFormatter(formatter)
     root.addHandler(handler)
 
-    main(serial.Serial('/dev/ttyACM0', 9600), PiCamera(), cv.CascadeClassifier('<NAME-HERE>'))
+    camera = PiCamera()
+    camera.rotation = 90
+    main(serial.Serial('/dev/ttyACM0', 9600), camera, cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_russian_plate_number.xml'))
+
