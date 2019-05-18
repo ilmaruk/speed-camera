@@ -1,5 +1,5 @@
 #include "SR04.h"
-#include "StateMachine.h"
+#include "TrafficLightUK.h"
 #include "SpeedCamera.h"
 
 #define TRIG_PIN 8
@@ -12,7 +12,7 @@
 
 SR04 sr04 = SR04(ECHO_PIN, TRIG_PIN);
 
-SmartTrafficLight stl = SmartTrafficLight(RED_LED_PIN, AMBER_LED_PIN, GREEN_LED_PIN);
+TrafficLight tl = TrafficLightUK(RED_LED_PIN, AMBER_LED_PIN, GREEN_LED_PIN);
 
 SpeedCamera sc = SpeedCamera(sr04, SPEED_LIMIT);
 
@@ -22,7 +22,7 @@ void setup() {
   pinMode(GREEN_LED_PIN, OUTPUT);
   Serial.begin(9600);
 
-  stl.carousel();
+  tl.carousel();
 }
 
 void loop() {
@@ -32,15 +32,15 @@ void loop() {
   };
 
   // Traffic light
-  stl.update();
+  tl.update();
 
   delay(SAMPLING_INTERVAL);
 }
 
 void alarm(double velocity) {
   // Set traffic light to Red
-  if (stl.getState().id == GO) {
-    stl.setState(stateSlow);
+  if (tl.getState().id == GO) {
+    tl.setState(SLOW); // This is wrong!!
   }
 
   Serial.print("Speeding,");
