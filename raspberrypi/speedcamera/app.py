@@ -61,5 +61,5 @@ if '__main__' == __name__:
     root.addHandler(handler)
 
     camera = PiCamera()
-    camera.rotation = 90
+    # camera.rotation = 90
     main(serial.Serial('/dev/ttyACM0', 9600), camera, cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_russian_plate_number.xml'))
