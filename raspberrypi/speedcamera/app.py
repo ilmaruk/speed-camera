@@ -44,7 +44,7 @@ def analyse_photo(image, classifier):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     regs = classifier.detectMultiScale(gray, 1.3, 5)
     for (x, y, w, h) in regs:
-        cv2.rectangle(image, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        cv2.rectangle(image, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
     image_path = '../photos/speeding-{:d}.jpg'.format(int(time.time()))
     cv2.imwrite(image_path, image)
